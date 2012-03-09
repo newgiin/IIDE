@@ -4,6 +4,6 @@
 iiBase::iiBase()
   : QMainWindow()
 {
-
+  setCentralWidget(&mainText);
 }
 

@@ -3,6 +3,7 @@
 
 #include <QApplication>
 #include <QMainWindow>
+#include <QTextEdit>
 
 class iiBase : public QMainWindow
 {
@@ -10,6 +11,9 @@ class iiBase : public QMainWindow
 
   public:
     iiBase();
+
+  private:
+    QTextEdit mainText;
 };
 
 #endif 
