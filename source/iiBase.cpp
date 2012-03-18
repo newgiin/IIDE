@@ -1,5 +1,7 @@
 #include "iiBase.h"
-
+#include <QFileDialog>
+#include <QFile>
+#include <QTextStream>
 
 iiBase::iiBase()
   : QMainWindow()
@@ -10,8 +12,8 @@ iiBase::iiBase()
 
   // File actions
   openFileAction = new QAction(tr("Open File"), this);
-  saveFileAction = new QAction(tr("Save File"), this);
-  connect(saveFileAction, SIGNAL(triggered()), this, SLOT(showSaveFileDialog()));
+  saveFileAsAction = new QAction(tr("Save File"), this);
+  connect(saveFileAsAction, SIGNAL(triggered()), this, SLOT(saveFileAsDialog()));
 
   // Program actions
   exitProgramAction = new QAction(tr("Exit"), this);
@@ -19,7 +21,7 @@ iiBase::iiBase()
   // Create and populate fileMenu
   fileMenu = menuBar()->addMenu(tr("File"));
   fileMenu->addAction(openFileAction);
-  fileMenu->addAction(saveFileAction);
+  fileMenu->addAction(saveFileAsAction);
   fileMenu->addAction(exitProgramAction);
 
 }
@@ -30,8 +32,13 @@ QSize iiBase::sizeHint() const
   //return QSize(QApplication::desktop()->availableGeometry().size());
 }
 
-void iiBase::showSaveFileDialog()
+void iiBase::saveFileAsDialog()
 {
-  QDialog saveFileDialog(this);
-  saveFileDialog.exec();
+  QString fileName = QFileDialog::getSaveFileName(this, "Save as...");
+
+  QFile file(fileName);
+  if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+    return;
+  QTextStream out(&file);
+  out << mainText.toPlainText();
 }

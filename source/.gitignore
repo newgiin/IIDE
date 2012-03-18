@@ -1,0 +1,4 @@
+IIDE
+Makefile
+moc_*
+*.o

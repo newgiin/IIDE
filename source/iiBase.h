@@ -10,6 +10,8 @@
 #include <QDialog>
 #include <QDesktopWidget>
 
+#include "iiTextDialog.h"
+
 class iiBase : public QMainWindow
 {
   Q_OBJECT
@@ -23,7 +25,7 @@ class iiBase : public QMainWindow
     void saveFile();
 
   public slots:
-    void showSaveFileDialog();
+    void saveFileAsDialog();
 
   private:
     QTextEdit mainText;
@@ -34,8 +36,14 @@ class iiBase : public QMainWindow
 
     // menu actions
     QAction *openFileAction;
-    QAction *saveFileAction;
+    QAction *saveFileAsAction;
 
+    // project actions
+    QAction *addFileToProjectAction;
+    QAction *removeFileFromProjectAction;
+
+    // git actions
+    QAction *openGitDialogAction;
 
     // program actions
     QAction *exitProgramAction;

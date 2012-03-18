@@ -8,6 +8,7 @@ DEPENDPATH += .
 INCLUDEPATH += .
 
 # Input
-HEADERS +=  iiBase.h
-SOURCES +=  IIDE.cpp iiBase.cpp
+HEADERS +=  iiBase.h iiTextDialog.h
+SOURCES +=  IIDE.cpp \
+            iiBase.cpp iiTextDialog.cpp
 
