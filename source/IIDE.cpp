@@ -1,11 +1,11 @@
 #include <QApplication>
-#include "iiBase.h"
+#include "iiMainWindow.h"
 
 
 int main(int argc, char **argv)
 {
   QApplication App(argc, argv);
-  iiBase Base;
-  Base.show();
+  iiMainWindow MainWindow;
+  MainWindow.show();
   return App.exec();
 }

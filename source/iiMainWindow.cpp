@@ -1,14 +1,25 @@
-#include "iiBase.h"
+#include "iiMainWindow.h"
 #include <QFileDialog>
 #include <QFile>
 #include <QTextStream>
 
-iiBase::iiBase()
+iiMainWindow::iiMainWindow()
   : QMainWindow()
 {
   setWindowState(Qt::WindowMaximized);
 
-  setCentralWidget(&mainText);
+  mainArea = new QMdiArea(this);
+  setCentralWidget(mainArea);
+
+  // Text widgets
+  mainEditor = new iiCodeArea();
+  suplEditor = new iiCodeArea();
+
+  mainArea->addSubWindow(mainEditor, Qt::FramelessWindowHint);
+  mainArea->addSubWindow(suplEditor, Qt::FramelessWindowHint);
+
+  mainArea->tileSubWindows();
+
 
   // File actions
   openFileAction = new QAction(tr("Open File"), this);
@@ -26,13 +37,13 @@ iiBase::iiBase()
 
 }
 
-QSize iiBase::sizeHint() const
+QSize iiMainWindow::sizeHint() const
 {
   return QSize(500,500);
   //return QSize(QApplication::desktop()->availableGeometry().size());
 }
 
-void iiBase::saveFileAsDialog()
+void iiMainWindow::saveFileAsDialog()
 {
   QString fileName = QFileDialog::getSaveFileName(this, "Save as...");
 
@@ -40,5 +51,5 @@ void iiBase::saveFileAsDialog()
   if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     return;
   QTextStream out(&file);
-  out << mainText.toPlainText();
+  out << mainEditor->toPlainText();
 }

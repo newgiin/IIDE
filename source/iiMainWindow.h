@@ -1,5 +1,5 @@
-#ifndef II_BASE_H
-#define II_BASE_H
+#ifndef II_MAINWINDOW_H
+#define II_MAINWINDOW_H
 
 #include <QApplication>
 #include <QMainWindow>
@@ -9,15 +9,19 @@
 #include <QAction>
 #include <QDialog>
 #include <QDesktopWidget>
+#include <QMdiArea>
+
+#include <vector>
 
 #include "iiTextDialog.h"
+#include "iiCodeArea.h"
 
-class iiBase : public QMainWindow
+class iiMainWindow : public QMainWindow
 {
   Q_OBJECT
 
   public:
-    iiBase();
+    iiMainWindow();
 
     QSize sizeHint() const;
 
@@ -28,7 +32,10 @@ class iiBase : public QMainWindow
     void saveFileAsDialog();
 
   private:
-    QTextEdit mainText;
+    QMdiArea *mainArea;
+    iiCodeArea *mainEditor;
+    iiCodeArea *suplEditor;
+    std::vector<iiCodeArea*> editors_v;
 
     // menus
     QMenu *fileMenu;
@@ -49,4 +56,4 @@ class iiBase : public QMainWindow
     QAction *exitProgramAction;
 };
 
-#endif 
+#endif
