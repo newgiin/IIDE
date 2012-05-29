@@ -15,8 +15,8 @@ iiMainWindow::iiMainWindow()
   mainEditor = new iiCodeArea();
   suplEditor = new iiCodeArea();
 
-  mainArea->addSubWindow(mainEditor, Qt::FramelessWindowHint);
-  mainArea->addSubWindow(suplEditor, Qt::FramelessWindowHint);
+  mainArea->addSubWindow(suplEditor);//, Qt::FramelessWindowHint);
+  mainArea->addSubWindow(mainEditor);//, Qt::FramelessWindowHint);
 
   mainArea->tileSubWindows();
 
@@ -50,6 +50,9 @@ void iiMainWindow::saveFileAsDialog()
   QFile file(fileName);
   if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     return;
+  mainEditor->setWindowTitle(fileName);
   QTextStream out(&file);
   out << mainEditor->toPlainText();
+  file.flush();
+  file.close();
 }
