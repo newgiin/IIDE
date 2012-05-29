@@ -22,11 +22,14 @@ iiMainWindow::iiMainWindow()
 
   // File actions
   openFileAction = new QAction(tr("Open File"), this);
-  saveFileAsAction = new QAction(tr("Save File"), this);
-  connect(saveFileAsAction, SIGNAL(triggered()), this, SLOT(saveFileAsDialog()));
-
-  // Program actions
+  saveFileAsAction = new QAction(tr("Save as..."), this);
   exitProgramAction = new QAction(tr("Exit"), this);
+
+  // Shortcuts for actions
+  saveFileAsAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_S));
+
+  // Connect actions
+  connect(saveFileAsAction, SIGNAL(triggered()), this, SLOT(saveFileAsDialog()));
 
   // Create and populate fileMenu
   fileMenu = menuBar()->addMenu(tr("File"));
