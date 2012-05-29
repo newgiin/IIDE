@@ -11,15 +11,14 @@ iiMainWindow::iiMainWindow()
   mainArea = new QMdiArea(this);
   setCentralWidget(mainArea);
 
-  // Text widgets
-  mainEditor = new iiCodeArea();
-  suplEditor = new iiCodeArea();
-
-  mainArea->addSubWindow(suplEditor);//, Qt::FramelessWindowHint);
-  mainArea->addSubWindow(mainEditor);//, Qt::FramelessWindowHint);
-
+  // create code areas
+  for (int i = 0; i < 6; i++) {
+    iiCodeArea *area = new iiCodeArea();
+    codeAreas.push_back(area);
+    mainArea->addSubWindow(area);
+  }
   mainArea->tileSubWindows();
-
+  //connect(mainArea, SIGNAL(subWindowActivated(QMdiSubWindow*)), this, SLOT(setActiveCodeArea(QMdiSubWindow*)));
 
   // File actions
   openFileAction = new QAction(tr("Open File"), this);
@@ -45,14 +44,24 @@ QSize iiMainWindow::sizeHint() const
 
 void iiMainWindow::saveFileAsDialog()
 {
+  QMdiSubWindow *activeSubWin = mainArea->activeSubWindow();
+  if (activeSubWin == 0)
+    return;
+
+  activeCodeArea = (iiCodeArea*) activeSubWin->widget();
   QString fileName = QFileDialog::getSaveFileName(this, "Save as...");
 
   QFile file(fileName);
   if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     return;
-  mainEditor->setWindowTitle(fileName);
+  activeCodeArea->setWindowTitle(fileName);
   QTextStream out(&file);
-  out << mainEditor->toPlainText();
+  out << activeCodeArea->toPlainText();
   file.flush();
   file.close();
+}
+
+void iiMainWindow::setActiveCodeArea(QMdiSubWindow *area)
+{
+  activeCodeArea = (iiCodeArea*)area;
 }

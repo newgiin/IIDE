@@ -10,6 +10,7 @@
 #include <QDialog>
 #include <QDesktopWidget>
 #include <QMdiArea>
+#include <QMdiSubWindow>
 
 #include <vector>
 
@@ -30,12 +31,12 @@ class iiMainWindow : public QMainWindow
 
   public slots:
     void saveFileAsDialog();
+    void setActiveCodeArea(QMdiSubWindow *area);
 
   private:
     QMdiArea *mainArea;
-    iiCodeArea *mainEditor;
-    iiCodeArea *suplEditor;
-    std::vector<iiCodeArea*> editors_v;
+    iiCodeArea *activeCodeArea;
+    std::vector<iiCodeArea*> codeAreas;
 
     // menus
     QMenu *fileMenu;
