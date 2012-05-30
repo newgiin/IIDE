@@ -31,6 +31,7 @@ class iiMainWindow : public QMainWindow
 
   public slots:
     void saveFileAsDialog();
+    void openFileDialog();
     void setActiveCodeArea(QMdiSubWindow *area);
 
   private:

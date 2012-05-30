@@ -18,17 +18,19 @@ iiMainWindow::iiMainWindow()
     mainArea->addSubWindow(area);
   }
   mainArea->tileSubWindows();
-  //connect(mainArea, SIGNAL(subWindowActivated(QMdiSubWindow*)), this, SLOT(setActiveCodeArea(QMdiSubWindow*)));
 
+  //// Menu
   // File actions
   openFileAction = new QAction(tr("Open File"), this);
   saveFileAsAction = new QAction(tr("Save as..."), this);
   exitProgramAction = new QAction(tr("Exit"), this);
 
   // Shortcuts for actions
+  openFileAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_O));
   saveFileAsAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_S));
 
   // Connect actions
+  connect(openFileAction, SIGNAL(triggered()), this, SLOT(openFileDialog()));
   connect(saveFileAsAction, SIGNAL(triggered()), this, SLOT(saveFileAsDialog()));
 
   // Create and populate fileMenu
@@ -36,7 +38,7 @@ iiMainWindow::iiMainWindow()
   fileMenu->addAction(openFileAction);
   fileMenu->addAction(saveFileAsAction);
   fileMenu->addAction(exitProgramAction);
-
+  ////
 }
 
 QSize iiMainWindow::sizeHint() const
@@ -64,6 +66,23 @@ void iiMainWindow::saveFileAsDialog()
   file.close();
 }
 
+void iiMainWindow::openFileDialog()
+{
+  QMdiSubWindow *activeSubWin = mainArea->activeSubWindow();
+  if (activeSubWin == 0)
+    return;
+
+  activeCodeArea = (iiCodeArea*) activeSubWin->widget();
+  QString fileName = QFileDialog::getOpenFileName(this, "Open file");
+
+  QFile file(fileName);
+  if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    return;
+  activeCodeArea->setWindowTitle(fileName);
+  QTextStream in(&file);
+  activeCodeArea->setPlainText(in.readAll());
+  file.close();
+}
 void iiMainWindow::setActiveCodeArea(QMdiSubWindow *area)
 {
   activeCodeArea = (iiCodeArea*)area;
