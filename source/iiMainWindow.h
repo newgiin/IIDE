@@ -27,11 +27,11 @@ class iiMainWindow : public QMainWindow
     QSize sizeHint() const;
 
   signals:
-    void saveFile();
 
   public slots:
-    void saveFileAsDialog();
     void openFileDialog();
+    void saveFile();
+    void saveFileAsDialog();
     void setActiveCodeArea(QMdiSubWindow *area);
 
   private:
@@ -45,6 +45,7 @@ class iiMainWindow : public QMainWindow
 
     // menu actions
     QAction *openFileAction;
+    QAction *saveFileAction;
     QAction *saveFileAsAction;
 
     // project actions
