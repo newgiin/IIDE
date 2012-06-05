@@ -18,6 +18,9 @@ class iiCodeArea : public QPlainTextEdit
     int lineNumberAreaWidth();
 
   private:
+    void keyPressEvent(QKeyEvent *event);
+
+  private:
     iiPythonHighlighter *highlighter;
     iiLineNumberArea *lineNumberArea;
 
