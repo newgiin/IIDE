@@ -25,13 +25,16 @@ iiPythonHighlighter::iiPythonHighlighter(QTextDocument *parent)
   }
 
   // quotation
-  quotationFormat.setFontWeight(QFont::Bold);
   quotationFormat.setForeground(Qt::darkGreen);
   rule.pattern = QRegExp("'.*'|\".*\"");
   rule.format = quotationFormat;
   highlightingRules.append(rule);
 
-  // 
+  // comments
+  commentFormat.setForeground(Qt::darkMagenta);
+  rule.pattern = QRegExp("#[^\n]*");
+  rule.format = commentFormat;
+  highlightingRules.append(rule);
 }
 
 void iiPythonHighlighter::highlightBlock(const QString &text)
