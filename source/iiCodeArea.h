@@ -2,6 +2,7 @@
 #define II_CODE_AREA
 
 #include <QPlainTextEdit>
+#include "iiPythonHighlighter.h"
 //#include "iiLineNumberArea.h"
 
 class iiLineNumberArea;
@@ -17,6 +18,7 @@ class iiCodeArea : public QPlainTextEdit
     int lineNumberAreaWidth();
 
   private:
+    iiPythonHighlighter *highlighter;
     iiLineNumberArea *lineNumberArea;
 
 };

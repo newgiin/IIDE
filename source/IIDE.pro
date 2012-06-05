@@ -9,8 +9,8 @@ INCLUDEPATH += .
 
 # Input
 HEADERS +=  iiMainWindow.h iiTextDialog.h iiCodeArea.h \
-            iiLineNumberArea.h
+            iiLineNumberArea.h iiPythonHighlighter.h
 SOURCES +=  IIDE.cpp \
             iiMainWindow.cpp iiTextDialog.cpp iiCodeArea.cpp \
-            iiLineNumberArea.cpp
+            iiLineNumberArea.cpp iiPythonHighlighter.cpp
 
