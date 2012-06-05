@@ -6,6 +6,7 @@ iiPythonHighlighter::iiPythonHighlighter(QTextDocument *parent)
 {
   HighlightingRule rule;
 
+  // keywords
   keywordFormat.setForeground(Qt::darkBlue);
   keywordFormat.setFontWeight(QFont::Bold);
   QStringList keywordPatterns;
@@ -22,6 +23,15 @@ iiPythonHighlighter::iiPythonHighlighter(QTextDocument *parent)
     rule.format = keywordFormat;
     highlightingRules.append(rule);
   }
+
+  // quotation
+  quotationFormat.setFontWeight(QFont::Bold);
+  quotationFormat.setForeground(Qt::darkGreen);
+  rule.pattern = QRegExp("'.*'|\".*\"");
+  rule.format = quotationFormat;
+  highlightingRules.append(rule);
+
+  // 
 }
 
 void iiPythonHighlighter::highlightBlock(const QString &text)
