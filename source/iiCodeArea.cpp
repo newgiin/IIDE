@@ -5,7 +5,6 @@ iiCodeArea::iiCodeArea()
   : QPlainTextEdit()
 {
   highlighter = new iiPythonHighlighter(document());
-  setTabStopWidth(20);
 }
 
 void iiCodeArea:: lineNumberAreaPaintEvent(QPaintEvent *event)

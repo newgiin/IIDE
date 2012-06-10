@@ -20,6 +20,12 @@ iiMainWindow::iiMainWindow()
   }
   mainArea->tileSubWindows();
 
+  // Create console in bottom dock area
+  console = new iiConsole(this);
+  consoleDock = new QDockWidget(tr("Console"), this);
+  consoleDock->setWidget(console);
+  addDockWidget(Qt::BottomDockWidgetArea, consoleDock);
+
   //// Menu
   // File actions
   openFileAction = new QAction(tr("Open file"), this);
@@ -44,6 +50,7 @@ iiMainWindow::iiMainWindow()
   fileMenu->addAction(saveFileAsAction);
   fileMenu->addAction(exitProgramAction);
   ////
+
 }
 
 QSize iiMainWindow::sizeHint() const

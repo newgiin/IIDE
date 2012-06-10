@@ -11,11 +11,13 @@
 #include <QDesktopWidget>
 #include <QMdiArea>
 #include <QMdiSubWindow>
+#include <QDockWidget>
 
 #include <vector>
 
 #include "iiTextDialog.h"
 #include "iiCodeArea.h"
+#include "iiConsole.h"
 
 class iiMainWindow : public QMainWindow
 {
@@ -39,6 +41,9 @@ class iiMainWindow : public QMainWindow
     iiCodeArea *activeCodeArea;
     std::vector<iiCodeArea*> codeAreas;
 
+    // console
+    QDockWidget *consoleDock;
+
     // menus
     QMenu *fileMenu;
     QMenu *helpMenu;
@@ -57,6 +62,9 @@ class iiMainWindow : public QMainWindow
 
     // program actions
     QAction *exitProgramAction;
+
+    // console
+    iiConsole *console;
 };
 
 #endif
