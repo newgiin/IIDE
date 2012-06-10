@@ -12,8 +12,10 @@ class iiConsole : public QWidget
   public:
     iiConsole(QWidget *parent = 0);
 
-  private:
     QPlainTextEdit *outputArea;
+
+
+  private:
     QVBoxLayout *layout;
 };
 

@@ -12,6 +12,7 @@
 #include <QMdiArea>
 #include <QMdiSubWindow>
 #include <QDockWidget>
+#include <QProcess>
 
 #include <vector>
 
@@ -35,6 +36,7 @@ class iiMainWindow : public QMainWindow
     void saveFile();
     void saveFileAsDialog();
     void setActiveCodeArea(QMdiSubWindow *area);
+    void runProgram();
 
   private:
     QMdiArea *mainArea;
@@ -43,6 +45,10 @@ class iiMainWindow : public QMainWindow
 
     // console
     QDockWidget *consoleDock;
+    iiConsole *console;
+
+    // console actions
+    QAction *runProgramAction;
 
     // menus
     QMenu *fileMenu;
@@ -62,9 +68,6 @@ class iiMainWindow : public QMainWindow
 
     // program actions
     QAction *exitProgramAction;
-
-    // console
-    iiConsole *console;
 };
 
 #endif

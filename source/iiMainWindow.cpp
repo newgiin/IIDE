@@ -3,6 +3,8 @@
 #include <QFile>
 #include <QTextStream>
 
+#include <iostream>
+
 iiMainWindow::iiMainWindow()
   : QMainWindow()
 {
@@ -31,23 +33,27 @@ iiMainWindow::iiMainWindow()
   openFileAction = new QAction(tr("Open file"), this);
   saveFileAction = new QAction(tr("Save"), this);
   saveFileAsAction = new QAction(tr("Save as"), this);
+  runProgramAction = new QAction(tr("Run program"), this);
   exitProgramAction = new QAction(tr("Exit"), this);
 
   // Shortcuts for actions
   openFileAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_O));
   saveFileAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_S));
   saveFileAsAction->setShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_S));
+  runProgramAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_R));
 
   // Connect actions
   connect(openFileAction, SIGNAL(triggered()), this, SLOT(openFileDialog()));
   connect(saveFileAction, SIGNAL(triggered()), this, SLOT(saveFile()));
   connect(saveFileAsAction, SIGNAL(triggered()), this, SLOT(saveFileAsDialog()));
+  connect(runProgramAction, SIGNAL(triggered()), this, SLOT(runProgram()));
 
   // Create and populate fileMenu
   fileMenu = menuBar()->addMenu(tr("File"));
   fileMenu->addAction(openFileAction);
   fileMenu->addAction(saveFileAction);
   fileMenu->addAction(saveFileAsAction);
+  fileMenu->addAction(runProgramAction);
   fileMenu->addAction(exitProgramAction);
   ////
 
@@ -122,4 +128,31 @@ void iiMainWindow::saveFileAsDialog()
 void iiMainWindow::setActiveCodeArea(QMdiSubWindow *area)
 {
   activeCodeArea = (iiCodeArea*)area;
+}
+
+/* Run a program (currently python only) */
+void iiMainWindow::runProgram()
+{
+  QMdiSubWindow *activeSubWin = mainArea->activeSubWindow();
+  if (activeSubWin == 0)
+    return;
+
+  std::cout << "RUN\n";
+  activeCodeArea = (iiCodeArea*) activeSubWin->widget();
+
+  // Run python process with title of active code area as argument
+  QString program = "python";
+  QStringList arguments;
+  arguments << activeCodeArea->windowTitle();
+  QProcess *programProcess = new QProcess(this);
+  programProcess->start(program, arguments);
+  if (!programProcess->waitForStarted()) {
+    std::cout << "ERROR starting program";
+    return;
+  }
+
+  if (!programProcess->waitForFinished())
+    return;
+
+  console->outputArea->setPlainText(programProcess->readAll());
 }
