@@ -13,6 +13,9 @@ iiMainWindow::iiMainWindow()
   mainArea = new QMdiArea(this);
   setCentralWidget(mainArea);
 
+  // init programProcess to null
+  programProcess = NULL;
+
   // create code areas
   for (int i = 0; i < 3; i++) {
     iiCodeArea *area = new iiCodeArea();
@@ -137,22 +140,33 @@ void iiMainWindow::runProgram()
   if (activeSubWin == 0)
     return;
 
-  std::cout << "RUN\n";
   activeCodeArea = (iiCodeArea*) activeSubWin->widget();
 
   // Run python process with title of active code area as argument
   QString program = "python";
   QStringList arguments;
   arguments << activeCodeArea->windowTitle();
-  QProcess *programProcess = new QProcess(this);
+  // If another process is running delete it and create a new one.
+  if (programProcess != NULL) {
+    programProcess->kill();
+    delete programProcess;
+  }
+  programProcess = new QProcess(this);
   programProcess->start(program, arguments);
   if (!programProcess->waitForStarted()) {
     std::cout << "ERROR starting program";
     return;
   }
 
-  if (!programProcess->waitForFinished())
+  /*if (!programProcess->waitForFinished())
     return;
+  */
 
+  connect(programProcess, SIGNAL(readyReadStandardOutput()),
+      this, SLOT(updateConsoleFromProcess()));
+}
+
+void iiMainWindow::updateConsoleFromProcess()
+{
   console->outputArea->setPlainText(programProcess->readAll());
 }

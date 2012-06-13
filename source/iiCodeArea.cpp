@@ -5,6 +5,7 @@ iiCodeArea::iiCodeArea()
   : QPlainTextEdit()
 {
   highlighter = new iiPythonHighlighter(document());
+  setFrameShape(QFrame::NoFrame);
 }
 
 void iiCodeArea:: lineNumberAreaPaintEvent(QPaintEvent *event)

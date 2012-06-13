@@ -37,11 +37,15 @@ class iiMainWindow : public QMainWindow
     void saveFileAsDialog();
     void setActiveCodeArea(QMdiSubWindow *area);
     void runProgram();
+    void updateConsoleFromProcess();
 
   private:
     QMdiArea *mainArea;
     iiCodeArea *activeCodeArea;
     std::vector<iiCodeArea*> codeAreas;
+
+    // process
+    QProcess *programProcess;
 
     // console
     QDockWidget *consoleDock;
