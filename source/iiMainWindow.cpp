@@ -20,6 +20,7 @@ iiMainWindow::iiMainWindow()
   for (int i = 0; i < 3; i++) {
     iiCodeArea *area = new iiCodeArea();
     area->setWindowTitle("Untitled");
+    area->setFrameShape(QFrame::NoFrame);
     codeAreas.push_back(area);
     mainArea->addSubWindow(area);
   }
@@ -158,15 +159,14 @@ void iiMainWindow::runProgram()
     return;
   }
 
-  /*if (!programProcess->waitForFinished())
-    return;
-  */
-
   connect(programProcess, SIGNAL(readyReadStandardOutput()),
+      this, SLOT(updateConsoleFromProcess()));
+  connect(programProcess, SIGNAL(readyReadStandardError()),
       this, SLOT(updateConsoleFromProcess()));
 }
 
 void iiMainWindow::updateConsoleFromProcess()
 {
-  console->outputArea->setPlainText(programProcess->readAll());
+  console->outputArea->appendPlainText(programProcess->readAllStandardOutput());
+  console->outputArea->appendPlainText(programProcess->readAllStandardError());
 }
