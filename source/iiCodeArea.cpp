@@ -1,11 +1,26 @@
-#include "iiCodeArea.h"
+#include <QFontDatabase>
+#include <QFont>
 
+#include "iiCodeArea.h"
 
 iiCodeArea::iiCodeArea()
   : QPlainTextEdit()
 {
   highlighter = new iiPythonHighlighter(document());
-  setFrameShape(QFrame::NoFrame);
+
+  QFontDatabase database;
+  QFont font;
+  if (database.families().contains("Monospace"))
+    font = QFont("Monospace", 10);
+  else {
+    foreach (QString family, database.families()) {
+      if (database.isFixedPitch(family)) {
+        font = QFont(family, 10);
+        break;
+      }
+    }
+  }
+  setFont(font);
 }
 
 void iiCodeArea:: lineNumberAreaPaintEvent(QPaintEvent *event)
