@@ -1,4 +1,5 @@
 IIDE
+IIDE.pro.user
 Makefile
 moc_*
 *.o
