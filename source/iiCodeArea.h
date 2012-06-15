@@ -2,6 +2,7 @@
 #define II_CODE_AREA
 
 #include <QPlainTextEdit>
+#include <QLabel>
 #include "iiPythonHighlighter.h"
 //#include "iiLineNumberArea.h"
 
@@ -12,10 +13,13 @@ class iiCodeArea : public QPlainTextEdit
 
   public:
     iiCodeArea();
-    ~iiCodeArea() {};
+    ~iiCodeArea() {}
 
     void lineNumberAreaPaintEvent(QPaintEvent *event);
     int lineNumberAreaWidth();
+
+    void setFileName(QString name);
+    QString getFileName();
 
   private:
     void keyPressEvent(QKeyEvent *event);
@@ -23,6 +27,7 @@ class iiCodeArea : public QPlainTextEdit
   private:
     iiPythonHighlighter *highlighter;
     iiLineNumberArea *lineNumberArea;
+    QString fileName;
 
 };
 

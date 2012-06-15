@@ -19,11 +19,17 @@ iiMainWindow::iiMainWindow()
   // create code areas
   for (int i = 0; i < 3; i++) {
     iiCodeArea *area = new iiCodeArea();
-    area->setWindowTitle("Untitled");
-    area->setFrameShape(QFrame::NoFrame);
     codeAreas.push_back(area);
     mainArea->addSubWindow(area);
   }
+
+  // style subwindows
+  QList<QMdiSubWindow*> subWindows = mainArea->subWindowList();
+  QList<QMdiSubWindow*>::iterator it;
+  for (it = subWindows.begin(); it < subWindows.end(); it++) {
+    //(*it)->setFrameShape(QFrame::Box);
+  }
+
   mainArea->tileSubWindows();
 
   // Create console in bottom dock area
@@ -82,6 +88,7 @@ void iiMainWindow::openFileDialog()
   if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
     return;
   activeCodeArea->setWindowTitle(fileName);
+  activeCodeArea->setFileName(fileName);
   QTextStream in(&file);
   activeCodeArea->setPlainText(in.readAll());
   file.close();
@@ -94,8 +101,8 @@ void iiMainWindow::saveFile()
     return;
 
   activeCodeArea = (iiCodeArea*) activeSubWin->widget();
-  QString fileName = activeCodeArea->windowTitle();
-  if (fileName == "Untitled") {
+  QString fileName = activeCodeArea->getFileName();
+  if (fileName == "") {
     saveFileAsDialog();
     return;
   }
@@ -103,7 +110,6 @@ void iiMainWindow::saveFile()
   QFile file(fileName);
   if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     return;
-  //activeCodeArea->setWindowTitle(fileName);
   QTextStream out(&file);
   out << activeCodeArea->toPlainText();
   file.flush();
@@ -123,6 +129,7 @@ void iiMainWindow::saveFileAsDialog()
   if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     return;
   activeCodeArea->setWindowTitle(fileName);
+  activeCodeArea->setFileName(fileName);
   QTextStream out(&file);
   out << activeCodeArea->toPlainText();
   file.flush();
