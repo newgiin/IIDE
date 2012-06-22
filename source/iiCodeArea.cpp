@@ -60,7 +60,7 @@ void iiCodeArea::keyPressEvent(QKeyEvent *event)
           i++;
       }
       QString trimmed = current_line.trimmed();
-      i += (trimmed[trimmed.length()-1] == ':') * tab_width;
+      i += (trimmed[trimmed.length() ? trimmed.length() - 1 : 0] == ':') * tab_width;
       // pass the enter event and auto indent by i spaces
       QPlainTextEdit::keyPressEvent(event);
       insertPlainText(std::string(i, ' ').c_str());
