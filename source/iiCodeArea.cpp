@@ -1,8 +1,13 @@
 #include <QFontDatabase>
 #include <QFont>
+#include <QTextBlock>
+#include <QCursor>
 
 #include "iiCodeArea.h"
 #include <string>
+
+#include <iostream>
+#include <fstream>
 
 iiCodeArea::iiCodeArea()
   : QPlainTextEdit()
@@ -47,6 +52,18 @@ void iiCodeArea::keyPressEvent(QKeyEvent *event)
 {
   if (event->key() == Qt::Key_Tab) {
       insertPlainText(std::string(tab_width, ' ').c_str());
+  } else if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return) {
+      QString current_line = textCursor().block().text();
+      int current_column = textCursor().columnNumber(); // might need to use positionInBlock..
+      int i = 0;
+      while (i < current_column && current_line[i] == ' ') {
+          i++;
+      }
+      QString trimmed = current_line.trimmed();
+      i += (trimmed[trimmed.length()-1] == ':') * tab_width;
+      // pass the enter event and auto indent by i spaces
+      QPlainTextEdit::keyPressEvent(event);
+      insertPlainText(std::string(i, ' ').c_str());
   } else {
     QPlainTextEdit::keyPressEvent(event);
   }

@@ -27,7 +27,7 @@ iiMainWindow::iiMainWindow()
   QList<QMdiSubWindow*> subWindows = mainArea->subWindowList();
   QList<QMdiSubWindow*>::iterator it;
   for (it = subWindows.begin(); it < subWindows.end(); it++) {
-    //(*it)->setFrameShape(QFrame::Box);
+    //(*it)->setWindowFlags(Qt::FramelessWindowHint);
   }
 
   mainArea->tileSubWindows();
