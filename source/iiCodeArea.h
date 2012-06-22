@@ -28,6 +28,7 @@ class iiCodeArea : public QPlainTextEdit
     iiPythonHighlighter *highlighter;
     iiLineNumberArea *lineNumberArea;
     QString fileName;
+    int tab_width;
 
 };
 

@@ -2,6 +2,7 @@
 #include <QFont>
 
 #include "iiCodeArea.h"
+#include <string>
 
 iiCodeArea::iiCodeArea()
   : QPlainTextEdit()
@@ -23,6 +24,7 @@ iiCodeArea::iiCodeArea()
     }
   }
   setFont(font);
+  tab_width = 4;
 
   fileName = QString("");
 }
@@ -44,7 +46,7 @@ QString iiCodeArea::getFileName()
 void iiCodeArea::keyPressEvent(QKeyEvent *event)
 {
   if (event->key() == Qt::Key_Tab) {
-    insertPlainText("    ");
+      insertPlainText(std::string(tab_width, ' ').c_str());
   } else {
     QPlainTextEdit::keyPressEvent(event);
   }
