@@ -51,17 +51,39 @@ QString iiCodeArea::getFileName()
 void iiCodeArea::keyPressEvent(QKeyEvent *event)
 {
   if (event->key() == Qt::Key_Tab) {
-      insertPlainText(std::string(tab_width, ' ').c_str());
+      // replace TAB with spaces
+      if (textCursor().hasSelection() == false) {
+        insertPlainText(std::string(tab_width, ' ').c_str());
+      }
+      // multiline indent
+      else {
+        QTextCursor cursor = textCursor();
+        int start_pos = cursor.selectionStart();
+        int end_pos = cursor.selectionEnd();
+
+        cursor.setPosition(start_pos);
+
+        while (start_pos < end_pos) {
+            cursor.movePosition(QTextCursor::StartOfLine);
+            cursor.insertText(std::string(tab_width, ' ').c_str());
+            if(cursor.movePosition(QTextCursor::NextBlock)) {
+                start_pos = cursor.position() - tab_width;
+            } else {
+                break;
+            }
+        }
+      }
   } else if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return) {
+      // autoindent on ENTER
       QString current_line = textCursor().block().text();
-      int current_column = textCursor().columnNumber(); // might need to use positionInBlock..
+      int current_column = textCursor().columnNumber();
       int i = 0;
       while (i < current_column && current_line[i] == ' ') {
           i++;
       }
       QString trimmed = current_line.trimmed();
       i += (trimmed[trimmed.length() ? trimmed.length() - 1 : 0] == ':') * tab_width;
-      // pass the enter event and auto indent by i spaces
+      // pass the enter event and then auto indent by i spaces
       QPlainTextEdit::keyPressEvent(event);
       insertPlainText(std::string(i, ' ').c_str());
   } else {
