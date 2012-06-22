@@ -24,6 +24,37 @@ iiPythonHighlighter::iiPythonHighlighter(QTextDocument *parent)
     highlightingRules.append(rule);
   }
 
+  // built-in functions
+  builtinFormat.setForeground(Qt::darkCyan);
+  builtinFormat.setFontWeight(QFont::Bold);
+  QStringList builtinPatterns;
+  builtinPatterns << "\\babs\\b" << "\\ball\\b" << "\\bany\\b" << "\\bbasestring\\b"
+                  << "\\bbin\\b" << "\\bbool\\b" << "\\bbytearray\\b" << "\\bcallable\\b"
+                  << "\\bchr\\b" << "\\bclassmethod\\b" << "\\bcmp\\b" << "\\bcompile\\b"
+                  << "\\bcomplex\\b" << "\\bdelattr\\b" << "\\bdict\\b" << "\\bdir\\b"
+                  << "\\bdivmod\\b" << "\\benumerate\\b" << "\\beval\\b" << "\\bexecfile\\b"
+                  << "\\bfile\\b" << "\\bfilter\\b" << "\\bfloat\\b" << "\\bformat\\b"
+                  << "\\bfrozenset\\b" << "\\bgetattr\\b" << "\\bglobals\\b" << "\\bhasattr\\b"
+                  << "\\bhash\\b" << "\\bhelp\\b" << "\\bhex\\b" << "\\bid\\b"
+                  << "\\binput\\b" << "\\bint\\b" << "\\bisinstance\\b" << "\\bissubclass\\b"
+                  << "\\biter\\b" << "\\blen\\b" << "\\blist\\b" << "\\blocals\\b"
+                  << "\\blong\\b" << "\\bmap\\b" << "\\bmax\\b" << "\\bmemoryview\\b"
+                  << "\\bmin\\b" << "\\bnext\\b" << "\\bobject\\b" << "\\boct\\b"
+                  << "\\bopend\\b" << "\\bord\\b" << "\\bpow\\b"
+                     // << "\\bprint\\b"
+                  << "\\bproperty\\b" << "\\brange\\b" << "\\braw_input\\b" << "\\breduce\\b"
+                  << "\\breload\\b" << "\\brepr\\b" << "\\breversed\\b" << "\\bround\\b"
+                  << "\\bset\\b" << "\\bsetattr\\b" << "\\bslice\\b" << "\\bsorted\\b"
+                  << "\\bstaticmethod\\b" << "\\bstr\\b" << "\\bsum\\b" << "\\bsuper\\b"
+                  << "\\btuple\\b" << "\\btype\\b" << "\\bunichr\\b" << "\\bunicode\\b"
+                  << "\\bvars\\b" << "\\bxrange\\b" << "\\bzip\\b" << "\\b__import__\\b"
+                  << "\\bapply\\b" << "\\bbuffer\\b" << "\\bcoerce\\b" << "\\bintern\\b";
+  foreach (const QString &pattern, builtinPatterns) {
+    rule.pattern = QRegExp(pattern);
+    rule.format = builtinFormat;
+    highlightingRules.append(rule);
+  }
+
   // quotation
   quotationFormat.setForeground(Qt::darkGreen);
   rule.pattern = QRegExp("'.*'|\".*\"");

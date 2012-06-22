@@ -22,6 +22,7 @@ class iiPythonHighlighter : public QSyntaxHighlighter
     QVector<HighlightingRule> highlightingRules;
 
     QTextCharFormat keywordFormat;
+    QTextCharFormat builtinFormat;
     QTextCharFormat commentFormat;
     QTextCharFormat quotationFormat;
 };
