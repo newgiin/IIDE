@@ -30,6 +30,7 @@ iiCodeArea::iiCodeArea()
   }
   setFont(font);
   tab_width = 4;
+  setWordWrapMode(QTextOption::NoWrap);
 
   fileName = QString("");
 }
