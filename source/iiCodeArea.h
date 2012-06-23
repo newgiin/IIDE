@@ -21,7 +21,7 @@ class iiCodeArea : public QPlainTextEdit
     void setFileName(QString name);
     QString getFileName();
 
-  private:
+  protected:
     void keyPressEvent(QKeyEvent *event);
 
   private:

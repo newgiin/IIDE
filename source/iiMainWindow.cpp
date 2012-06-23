@@ -4,6 +4,7 @@
 #include <QTextStream>
 
 #include <iostream>
+#include <fstream>
 
 iiMainWindow::iiMainWindow()
   : QMainWindow()
@@ -15,6 +16,7 @@ iiMainWindow::iiMainWindow()
 
   // init programProcess to null
   programProcess = NULL;
+  //setWindowFlags(Qt::FramelessWindowHint);
 
   // create code areas
   for (int i = 0; i < 3; i++) {
@@ -67,11 +69,13 @@ iiMainWindow::iiMainWindow()
   fileMenu->addAction(exitProgramAction);
   ////
 
+  resize(sizeHint());
+
 }
 
 QSize iiMainWindow::sizeHint() const
 {
-  return QSize(500,500);
+  return QSize(800,600);
   //return QSize(QApplication::desktop()->availableGeometry().size());
 }
 

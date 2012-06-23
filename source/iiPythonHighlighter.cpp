@@ -41,7 +41,6 @@ iiPythonHighlighter::iiPythonHighlighter(QTextDocument *parent)
                   << "\\blong\\b" << "\\bmap\\b" << "\\bmax\\b" << "\\bmemoryview\\b"
                   << "\\bmin\\b" << "\\bnext\\b" << "\\bobject\\b" << "\\boct\\b"
                   << "\\bopend\\b" << "\\bord\\b" << "\\bpow\\b"
-                     // << "\\bprint\\b"
                   << "\\bproperty\\b" << "\\brange\\b" << "\\braw_input\\b" << "\\breduce\\b"
                   << "\\breload\\b" << "\\brepr\\b" << "\\breversed\\b" << "\\bround\\b"
                   << "\\bset\\b" << "\\bsetattr\\b" << "\\bslice\\b" << "\\bsorted\\b"
