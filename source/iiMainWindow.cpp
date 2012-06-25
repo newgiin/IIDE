@@ -20,7 +20,7 @@ iiMainWindow::iiMainWindow()
 
   // create code areas
   for (int i = 0; i < 3; i++) {
-    iiCodeArea *area = new iiCodeArea();
+    iiCodeArea *area = new iiCodeArea(this);
     codeAreas.push_back(area);
     mainArea->addSubWindow(area);
   }
@@ -33,6 +33,12 @@ iiMainWindow::iiMainWindow()
   }
 
   mainArea->tileSubWindows();
+
+  // Create codeOutline in right dock area
+  codeOutline = new QTreeWidget(this);
+  codeOutlineDock = new QDockWidget(tr("Outline"), this);
+  codeOutlineDock->setWidget(codeOutline);
+  addDockWidget(Qt::RightDockWidgetArea, codeOutlineDock);
 
   // Create console in bottom dock area
   console = new iiConsole(this);

@@ -12,7 +12,7 @@ class iiCodeArea : public QPlainTextEdit
 {
 
   public:
-    iiCodeArea();
+    iiCodeArea(QWidget *parent = 0);
     ~iiCodeArea() {}
 
     void lineNumberAreaPaintEvent(QPaintEvent *event);

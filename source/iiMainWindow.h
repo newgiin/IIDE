@@ -12,6 +12,7 @@
 #include <QMdiArea>
 #include <QMdiSubWindow>
 #include <QDockWidget>
+#include <QTreeWidget>
 #include <QProcess>
 
 #include <vector>
@@ -48,8 +49,12 @@ class iiMainWindow : public QMainWindow
     QProcess *programProcess;
 
     // console
-    QDockWidget *consoleDock;
     iiConsole *console;
+    QDockWidget *consoleDock;
+
+    // code outline
+    QTreeWidget *codeOutline;
+    QDockWidget *codeOutlineDock;
 
     // console actions
     QAction *runProgramAction;

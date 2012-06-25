@@ -9,8 +9,8 @@
 #include <iostream>
 #include <fstream>
 
-iiCodeArea::iiCodeArea()
-  : QPlainTextEdit()
+iiCodeArea::iiCodeArea(QWidget *parent)
+  : QPlainTextEdit(parent)
 {
   // Enable python highlighting
   highlighter = new iiPythonHighlighter(document());
