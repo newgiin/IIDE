@@ -38,7 +38,9 @@ class iiMainWindow : public QMainWindow
     void saveFileAsDialog();
     void setActiveCodeArea(QMdiSubWindow *area);
     void runProgram();
+    void runPythonParser();
     void updateConsoleFromProcess();
+    void updateCodeOutline();
 
   private:
     QMdiArea *mainArea;
@@ -47,6 +49,7 @@ class iiMainWindow : public QMainWindow
 
     // process
     QProcess *programProcess;
+    QProcess *pythonParserProcess;
 
     // console
     iiConsole *console;

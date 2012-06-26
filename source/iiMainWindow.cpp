@@ -14,12 +14,13 @@ iiMainWindow::iiMainWindow()
   mainArea = new QMdiArea(this);
   setCentralWidget(mainArea);
 
-  // init programProcess to null
+  // init processes to null
   programProcess = NULL;
+  pythonParserProcess = NULL;
   //setWindowFlags(Qt::FramelessWindowHint);
 
   // create code areas
-  for (int i = 0; i < 3; i++) {
+  for (int i = 0; i < 1; i++) {
     iiCodeArea *area = new iiCodeArea(this);
     codeAreas.push_back(area);
     mainArea->addSubWindow(area);
@@ -36,7 +37,9 @@ iiMainWindow::iiMainWindow()
 
   // Create codeOutline in right dock area
   codeOutline = new QTreeWidget(this);
-  codeOutlineDock = new QDockWidget(tr("Outline"), this);
+  codeOutline->setColumnCount(1);
+  codeOutline->setHeaderLabel(QString("Outline"));
+  codeOutlineDock = new QDockWidget(tr("Code"), this);
   codeOutlineDock->setWidget(codeOutline);
   addDockWidget(Qt::RightDockWidgetArea, codeOutlineDock);
 
@@ -85,6 +88,7 @@ QSize iiMainWindow::sizeHint() const
   //return QSize(QApplication::desktop()->availableGeometry().size());
 }
 
+
 void iiMainWindow::openFileDialog()
 {
   QMdiSubWindow *activeSubWin = mainArea->activeSubWindow();
@@ -102,10 +106,13 @@ void iiMainWindow::openFileDialog()
   QTextStream in(&file);
   activeCodeArea->setPlainText(in.readAll());
   file.close();
+
+  runPythonParser();
 }
 
 void iiMainWindow::saveFile()
 {
+
   QMdiSubWindow *activeSubWin = mainArea->activeSubWindow();
   if (activeSubWin == 0)
     return;
@@ -124,6 +131,8 @@ void iiMainWindow::saveFile()
   out << activeCodeArea->toPlainText();
   file.flush();
   file.close();
+
+  runPythonParser();
 }
 
 void iiMainWindow::saveFileAsDialog()
@@ -148,7 +157,32 @@ void iiMainWindow::saveFileAsDialog()
 
 void iiMainWindow::setActiveCodeArea(QMdiSubWindow *area)
 {
+  mainArea->setActiveSubWindow(area);
   activeCodeArea = (iiCodeArea*)area;
+}
+
+void iiMainWindow::runPythonParser()
+{
+  // Run python parser script to get code outline info
+  QString program = "python";
+  QStringList arguments;
+  arguments << "python/python_parser.py" << activeCodeArea->getFileName();
+  // If another process is running delete it and create a new one.
+  if (pythonParserProcess != NULL) {
+    pythonParserProcess->kill();
+    delete pythonParserProcess;
+  }
+  pythonParserProcess = new QProcess(this);
+  pythonParserProcess->start(program, arguments);
+  if (!pythonParserProcess->waitForStarted()) {
+    std::cout << "ERROR starting python_parser program";
+    return;
+  }
+
+  connect(pythonParserProcess, SIGNAL(readyReadStandardOutput()),
+      this, SLOT(updateCodeOutline()));
+  connect(pythonParserProcess, SIGNAL(readyReadStandardError()),
+      this, SLOT(updateCodeOutline()));
 }
 
 /* Run a program (currently python only) */
@@ -184,6 +218,40 @@ void iiMainWindow::runProgram()
 
 void iiMainWindow::updateConsoleFromProcess()
 {
-  console->outputArea->appendPlainText(programProcess->readAllStandardOutput());
-  console->outputArea->appendPlainText(programProcess->readAllStandardError());
+  if (sender() == programProcess) {
+    console->outputArea->appendPlainText(programProcess->readAllStandardOutput());
+    console->outputArea->appendPlainText(programProcess->readAllStandardError());
+  } else if (sender() == pythonParserProcess) {
+    console->outputArea->appendPlainText(pythonParserProcess->readAllStandardOutput());
+    console->outputArea->appendPlainText(pythonParserProcess->readAllStandardError());
+  }
+}
+
+void iiMainWindow::updateCodeOutline()
+{
+  QStringList funcs =
+     QString(pythonParserProcess->readAllStandardOutput()).split("\n", 
+         QString::SkipEmptyParts);
+
+  // recreate entire qtreewidget listing
+  delete codeOutline;
+  codeOutline = new QTreeWidget(this);
+  codeOutline->setColumnCount(1);
+  codeOutline->setHeaderLabel(QString("Outline"));
+
+  // Function header
+  QTreeWidgetItem *functionsHeader =
+    new QTreeWidgetItem(codeOutline, QStringList(QString("Functions")));
+  codeOutline->addTopLevelItem(functionsHeader);
+  codeOutline->expandItem(functionsHeader);
+
+  // Add functions to outline
+  QList<QTreeWidgetItem *> items;
+  for (int i = 0; i < funcs.length(); i++) {
+    items.append(new QTreeWidgetItem(functionsHeader, QStringList(QString(funcs[i]))));
+  }
+  functionsHeader->addChildren(items);
+
+  // attach to dock
+  codeOutlineDock->setWidget(codeOutline);
 }
