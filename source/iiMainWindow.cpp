@@ -2,6 +2,7 @@
 #include <QFileDialog>
 #include <QFile>
 #include <QTextStream>
+#include <QHeaderView>
 
 #include <iostream>
 #include <fstream>
@@ -38,8 +39,8 @@ iiMainWindow::iiMainWindow()
   // Create codeOutline in right dock area
   codeOutline = new QTreeWidget(this);
   codeOutline->setColumnCount(1);
-  codeOutline->setHeaderLabel(QString("Outline"));
-  codeOutlineDock = new QDockWidget(tr("Code"), this);
+  codeOutline->header()->hide();
+  codeOutlineDock = new QDockWidget(tr("Outline"), this);
   codeOutlineDock->setWidget(codeOutline);
   addDockWidget(Qt::RightDockWidgetArea, codeOutlineDock);
 
@@ -237,7 +238,7 @@ void iiMainWindow::updateCodeOutline()
   delete codeOutline;
   codeOutline = new QTreeWidget(this);
   codeOutline->setColumnCount(1);
-  codeOutline->setHeaderLabel(QString("Outline"));
+  codeOutline->header()->hide();
 
   // Function header
   QTreeWidgetItem *functionsHeader =
