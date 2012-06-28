@@ -166,7 +166,7 @@ void iiMainWindow::runPythonParser()
   // Run python parser script to get code outline info
   QString program = "python";
   QStringList arguments;
-  arguments << "python/python_parser.py" << activeCodeArea->getFileName();
+  arguments << "python/python_parser.py" << activeCodeArea->toPlainText();
   // If another process is running delete it and create a new one.
   if (pythonParserProcess != NULL) {
     pythonParserProcess->kill();
