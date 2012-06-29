@@ -21,6 +21,12 @@
 #include "iiCodeArea.h"
 #include "iiConsole.h"
 
+struct OutlineFunction 
+{
+  QString name;           // name + args
+  int     line_no;        // line number
+};
+
 class iiMainWindow : public QMainWindow
 {
   Q_OBJECT
@@ -41,6 +47,7 @@ class iiMainWindow : public QMainWindow
     void runPythonParser();
     void updateConsoleFromProcess();
     void updateCodeOutline();
+    void jumpToFunction(QTreeWidgetItem* item, int column);
 
   private:
     QMdiArea *mainArea;
@@ -58,6 +65,7 @@ class iiMainWindow : public QMainWindow
     // code outline
     QTreeWidget *codeOutline;
     QDockWidget *codeOutlineDock;
+    std::vector<OutlineFunction> outline_functions;
 
     // console actions
     QAction *runProgramAction;

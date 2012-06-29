@@ -5,19 +5,6 @@ if len(sys.argv) != 2:
 	sys.exit()
 
 if __name__ == "__main__":
-
-	"""
-	sys.path.append(os.path.abspath("."))
-
-	try:
-		mod = __import__(os.path.relpath(sys.argv[1][:-3]))
-	except SyntaxError:
-		sys.exit()
-	funcs = [mod.__dict__.get(a) for a in dir(mod)
-		if isinstance(mod.__dict__.get(a), types.FunctionType)]
-	for func in funcs:
-		print func.__name__
-	"""
 	tree = ast.parse(sys.argv[1])
 
 	functions = []
@@ -28,4 +15,4 @@ if __name__ == "__main__":
 	for function in functions:
 		args = ", ".join(function.args.args[i].id for i in range(len(function.args.args)))
 		print function.name + "(" + args + ")"
-
+		print inspect.getmembers(function)[2][1]["lineno"]

@@ -234,11 +234,15 @@ void iiMainWindow::updateCodeOutline()
      QString(pythonParserProcess->readAllStandardOutput()).split("\n", 
          QString::SkipEmptyParts);
 
-  // recreate entire qtreewidget listing
+  // Recreate entire qtreewidget listing
   delete codeOutline;
   codeOutline = new QTreeWidget(this);
   codeOutline->setColumnCount(1);
   codeOutline->header()->hide();
+
+  // Set signal
+  connect(codeOutline, SIGNAL(itemClicked(QTreeWidgetItem*, int)),
+        this, SLOT(jumpToFunction(QTreeWidgetItem*, int)));
 
   // Function header
   QTreeWidgetItem *functionsHeader =
@@ -248,11 +252,35 @@ void iiMainWindow::updateCodeOutline()
 
   // Add functions to outline
   QList<QTreeWidgetItem *> items;
-  for (int i = 0; i < funcs.length(); i++) {
-    items.append(new QTreeWidgetItem(functionsHeader, QStringList(QString(funcs[i]))));
+  OutlineFunction func;
+  for (int i = 0; i < funcs.length(); i+=2) {
+    func.name = QString(funcs[i]);
+    func.line_no = funcs[i+1].toInt();
+    outline_functions.push_back(func);
+    items.append(new QTreeWidgetItem(functionsHeader, QStringList(func.name)));
   }
   functionsHeader->addChildren(items);
 
   // attach to dock
   codeOutlineDock->setWidget(codeOutline);
+}
+
+void iiMainWindow::jumpToFunction(QTreeWidgetItem *item, int column)
+{
+  int index = codeOutline->topLevelItem(0)->indexOfChild(item);
+  int line_no = outline_functions[index].line_no;
+  if (line_no < 0 || column != 0) {
+    std::cout << "ERROR in jumpToFunction. Bad index." << std::endl;
+    return;
+  }
+
+  QTextCursor new_cursor = activeCodeArea->textCursor();
+  new_cursor.setPosition(0);
+  for (int i = 1; i < line_no; i++) {
+    new_cursor.movePosition(QTextCursor::NextBlock);
+  }
+  new_cursor.movePosition(QTextCursor::EndOfBlock);
+  activeCodeArea->setTextCursor(new_cursor);
+
+  activeCodeArea->setFocus(Qt::OtherFocusReason);
 }
