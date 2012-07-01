@@ -107,7 +107,6 @@ void iiMainWindow::openFileDialog()
   QTextStream in(&file);
   activeCodeArea->setPlainText(in.readAll());
   file.close();
-
   runPythonParser();
 }
 
@@ -176,14 +175,12 @@ void iiMainWindow::runPythonParser()
   pythonParserProcess = new QProcess(this);
   pythonParserProcess->start(program, arguments);
   if (!pythonParserProcess->waitForStarted()) {
-    std::cout << "ERROR starting python_parser program";
+    std::cout << "ERROR starting python_parser program" << std::endl;
     return;
   }
 
-  connect(pythonParserProcess, SIGNAL(readyReadStandardOutput()),
-      this, SLOT(updateCodeOutline()));
-  connect(pythonParserProcess, SIGNAL(readyReadStandardError()),
-      this, SLOT(updateCodeOutline()));
+  connect(pythonParserProcess, SIGNAL(finished(int, QProcess::ExitStatus)),
+      this, SLOT(updateCodeOutlineFromProcess(int, QProcess::ExitStatus)));
 }
 
 /* Run a program (currently python only) */
@@ -228,7 +225,7 @@ void iiMainWindow::updateConsoleFromProcess()
   }
 }
 
-void iiMainWindow::updateCodeOutline()
+void iiMainWindow::updateCodeOutlineFromProcess(int exitCode, QProcess::ExitStatus exitStatus)
 {
   QStringList funcs =
      QString(pythonParserProcess->readAllStandardOutput()).split("\n", 
@@ -251,6 +248,7 @@ void iiMainWindow::updateCodeOutline()
   codeOutline->expandItem(functionsHeader);
 
   // Add functions to outline
+  outline_functions.clear();
   QList<QTreeWidgetItem *> items;
   OutlineFunction func;
   for (int i = 0; i < funcs.length(); i+=2) {
@@ -267,12 +265,12 @@ void iiMainWindow::updateCodeOutline()
 
 void iiMainWindow::jumpToFunction(QTreeWidgetItem *item, int column)
 {
+  std::cout << "ERROR in jumpToFunction. Bad index." << std::endl;
   int index = codeOutline->topLevelItem(0)->indexOfChild(item);
-  int line_no = outline_functions[index].line_no;
-  if (line_no < 0 || column != 0) {
-    std::cout << "ERROR in jumpToFunction. Bad index." << std::endl;
+  if (index < 0 || column != 0) {
     return;
   }
+  int line_no = outline_functions[index].line_no;
 
   QTextCursor new_cursor = activeCodeArea->textCursor();
   new_cursor.setPosition(0);

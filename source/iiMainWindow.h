@@ -46,7 +46,7 @@ class iiMainWindow : public QMainWindow
     void runProgram();
     void runPythonParser();
     void updateConsoleFromProcess();
-    void updateCodeOutline();
+    void updateCodeOutlineFromProcess(int exitCode, QProcess::ExitStatus exitStatus);
     void jumpToFunction(QTreeWidgetItem* item, int column);
 
   private:
@@ -66,6 +66,7 @@ class iiMainWindow : public QMainWindow
     QTreeWidget *codeOutline;
     QDockWidget *codeOutlineDock;
     std::vector<OutlineFunction> outline_functions;
+    QTreeWidgetItem *functionsHeader;
 
     // console actions
     QAction *runProgramAction;
