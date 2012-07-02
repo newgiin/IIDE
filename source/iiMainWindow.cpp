@@ -219,6 +219,8 @@ void iiMainWindow::updateConsoleFromProcess()
   if (sender() == programProcess) {
     console->outputArea->appendPlainText(programProcess->readAllStandardOutput());
     console->outputArea->appendPlainText(programProcess->readAllStandardError());
+    console->outputArea->textCursor().deletePreviousChar();
+    console->outputArea->textCursor().deletePreviousChar();
   } else if (sender() == pythonParserProcess) {
     console->outputArea->appendPlainText(pythonParserProcess->readAllStandardOutput());
     console->outputArea->appendPlainText(pythonParserProcess->readAllStandardError());
