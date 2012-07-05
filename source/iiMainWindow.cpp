@@ -195,7 +195,7 @@ void iiMainWindow::runProgram()
   // Run python process with title of active code area as argument
   QString program = "python";
   QStringList arguments;
-  arguments << activeCodeArea->windowTitle();
+  arguments << "-u" << activeCodeArea->windowTitle();
   // If another process is running delete it and create a new one.
   if (programProcess != NULL) {
     programProcess->kill();
