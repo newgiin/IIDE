@@ -18,11 +18,14 @@ iiMainWindow::iiMainWindow()
   // init processes to null
   programProcess = NULL;
   pythonParserProcess = NULL;
+  activeCodeArea = NULL;
+
   //setWindowFlags(Qt::FramelessWindowHint);
 
   // create code areas
   for (int i = 0; i < 1; i++) {
     iiCodeArea *area = new iiCodeArea(this);
+    activeCodeArea = area;
     codeAreas.push_back(area);
     mainArea->addSubWindow(area);
   }
@@ -49,6 +52,12 @@ iiMainWindow::iiMainWindow()
   consoleDock = new QDockWidget(tr("Console"), this);
   consoleDock->setWidget(console);
   addDockWidget(Qt::BottomDockWidgetArea, consoleDock);
+
+  // Initilize timer for responsible for keeping codeOutline updated
+  parseTimer = new QTimer(this);
+  connect(parseTimer, SIGNAL(timeout()), this, SLOT(runPythonParser()));
+  parseTimer->start(500);
+
 
   //// Menu
   // File actions
@@ -163,6 +172,9 @@ void iiMainWindow::setActiveCodeArea(QMdiSubWindow *area)
 
 void iiMainWindow::runPythonParser()
 {
+  if (!activeCodeArea)
+    return;
+
   // Run python parser script to get code outline info
   QString program = "python";
   QStringList arguments;

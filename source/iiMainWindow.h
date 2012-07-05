@@ -14,6 +14,7 @@
 #include <QDockWidget>
 #include <QTreeWidget>
 #include <QProcess>
+#include <QTimer>
 
 #include <vector>
 
@@ -67,6 +68,9 @@ class iiMainWindow : public QMainWindow
     QDockWidget *codeOutlineDock;
     std::vector<OutlineFunction> outline_functions;
     QTreeWidgetItem *functionsHeader;
+
+    // timer
+    QTimer *parseTimer;
 
     // console actions
     QAction *runProgramAction;
