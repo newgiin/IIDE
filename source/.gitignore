@@ -1,5 +1,6 @@
-IIDE
-IIDE.pro.user
-Makefile
+IIDE*
+Makefile*
 moc_*
 *.o
+\debug
+vc90.pdb

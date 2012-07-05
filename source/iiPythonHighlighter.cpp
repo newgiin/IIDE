@@ -57,6 +57,7 @@ iiPythonHighlighter::iiPythonHighlighter(QTextDocument *parent)
   // quotation
   quotationFormat.setForeground(Qt::darkGreen);
   rule.pattern = QRegExp("'.*'|\".*\"");
+  rule.pattern.setMinimal(true);
   rule.format = quotationFormat;
   highlightingRules.append(rule);
 
