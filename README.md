@@ -5,8 +5,7 @@ IIDE
 About
 -----
 
-This is an attempt to build an IDE quite unlike anything out there. While a lot of well developed IDEs exist, there is little variation between them at least when it comes down to the actual writing of software. This might be because the current methodology is optimal, but I am not quite convinced and as such I'll try to build a new type of IDE.
-
+This is an attemp to build a slightly different than normal IDE.
 
 Main Idea
 ---------
@@ -20,8 +19,6 @@ That's one, perhaps minor, example of how current IDE's can be innovated - or at
 
 Feature Wish-list
 -----------------
-
-These will be expounded on when I start implementing them. For now this is a rough outline of what I would like to have one day...
 
 ### Class/function centric editing
 Concentrate on editing functions and classes without caring about the structure of the file.
@@ -52,6 +49,6 @@ Plan
 
 As a complete newbie in this area I'll claim success if I accomplish the first feature...
 
-I'll be using C++, Qt for development and will concentrate on making the IDE first for one of C, C++, or python.
+I'll be using C++, Qt for development and will concentrate on making the IDE first for Python.
 
 
