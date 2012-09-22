@@ -36,8 +36,15 @@ iiMainWindow::iiMainWindow()
   for (it = subWindows.begin(); it < subWindows.end(); it++) {
     //(*it)->setWindowFlags(Qt::FramelessWindowHint);
   }
-
   mainArea->tileSubWindows();
+
+  // create editing actions
+  fnSelectAction = new QAction(this);
+  fnSelectAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_K));
+  addAction(fnSelectAction);
+  connect(fnSelectAction, SIGNAL(triggered()), this, SLOT(fnSelect()));
+
+
 
   // Create codeOutline in right dock area
   codeOutline = new QTreeWidget(this);
@@ -98,6 +105,18 @@ QSize iiMainWindow::sizeHint() const
   //return QSize(QApplication::desktop()->availableGeometry().size());
 }
 
+
+void iiMainWindow::fnSelect()
+{
+  std::cout << "dialog0" << endl;
+  QMdiSubWindow *activeSubWin = mainArea->activeSubWindow();
+  if (activeSubWin == 0)
+    return;
+
+  activeCodeArea = (iiCodeArea*) activeSubWin->widget();
+  fnSelectDialog = new iiFnSelectDialog();
+  std::cout << "dialog" << endl;
+}
 
 void iiMainWindow::openFileDialog()
 {

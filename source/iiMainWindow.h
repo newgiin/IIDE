@@ -18,9 +18,9 @@
 
 #include <vector>
 
-#include "iiTextDialog.h"
 #include "iiCodeArea.h"
 #include "iiConsole.h"
+#include "iiFnSelectDialog.h"
 
 struct OutlineFunction 
 {
@@ -40,6 +40,7 @@ class iiMainWindow : public QMainWindow
   signals:
 
   public slots:
+    void fnSelect();
     void openFileDialog();
     void saveFile();
     void saveFileAsDialog();
@@ -52,8 +53,6 @@ class iiMainWindow : public QMainWindow
 
   private:
     QMdiArea *mainArea;
-    iiCodeArea *activeCodeArea;
-    std::vector<iiCodeArea*> codeAreas;
 
     // process
     QProcess *programProcess;
@@ -62,6 +61,11 @@ class iiMainWindow : public QMainWindow
     // console
     iiConsole *console;
     QDockWidget *consoleDock;
+
+    // editor
+    iiCodeArea *activeCodeArea;
+    std::vector<iiCodeArea*> codeAreas;
+    iiFnSelectDialog *fnSelectDialog;
 
     // code outline
     QTreeWidget *codeOutline;
@@ -83,6 +87,9 @@ class iiMainWindow : public QMainWindow
     QAction *openFileAction;
     QAction *saveFileAction;
     QAction *saveFileAsAction;
+
+    // code actions
+    QAction *fnSelectAction;
 
     // project actions
     QAction *addFileToProjectAction;
