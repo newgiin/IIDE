@@ -236,10 +236,12 @@ void iiMainWindow::runProgram()
     delete programProcess;
   }
   programProcess = new QProcess(this);
-  QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-  env.insert("PWD", activeCodeArea->getFileName());
-  programProcess->setProcessEnvironment(env);
 
+  // set the pythonpath so relative paths from the program work
+  QFileInfo finfo = QFileInfo(activeCodeArea->getFileName());
+  programProcess->setWorkingDirectory(finfo.dir().absolutePath());
+
+  // start the process
   programProcess->start(program, arguments);
   if (!programProcess->waitForStarted()) {
     std::cout << "ERROR starting program";
@@ -257,7 +259,6 @@ void iiMainWindow::updateConsoleFromProcess()
   if (sender() == programProcess) {
     console->outputArea->appendPlainText(programProcess->readAllStandardOutput());
     console->outputArea->appendPlainText(programProcess->readAllStandardError());
-    console->outputArea->textCursor().deletePreviousChar();
     console->outputArea->textCursor().deletePreviousChar();
   } else if (sender() == pythonParserProcess) {
     console->outputArea->appendPlainText(pythonParserProcess->readAllStandardOutput());
