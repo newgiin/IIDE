@@ -20,6 +20,9 @@ iiMainWindow::iiMainWindow()
   pythonParserProcess = NULL;
   activeCodeArea = NULL;
 
+  // init meta information
+  lastUsedDirectory = "";
+
   //setWindowFlags(Qt::FramelessWindowHint);
 
   // create code areas
@@ -125,7 +128,7 @@ void iiMainWindow::openFileDialog()
     return;
 
   activeCodeArea = (iiCodeArea*) activeSubWin->widget();
-  QString fileName = QFileDialog::getOpenFileName(this, "Open file");
+  QString fileName = QFileDialog::getOpenFileName(this, "Open file", lastUsedDirectory);
 
   QFile file(fileName);
   if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -233,6 +236,10 @@ void iiMainWindow::runProgram()
     delete programProcess;
   }
   programProcess = new QProcess(this);
+  QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+  env.insert("PWD", activeCodeArea->getFileName());
+  programProcess->setProcessEnvironment(env);
+
   programProcess->start(program, arguments);
   if (!programProcess->waitForStarted()) {
     std::cout << "ERROR starting program";

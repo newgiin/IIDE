@@ -4,7 +4,6 @@
 #include <QPlainTextEdit>
 #include <QLabel>
 #include "iiPythonHighlighter.h"
-//#include "iiLineNumberArea.h"
 
 class iiLineNumberArea;
 

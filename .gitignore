@@ -1,1 +1,5 @@
 IIDE-build-desktop-4_6_2_Debug/*
+source/vc100.pdb
+source/object_script.IIDE.*
+source/test2.py
+source/test3.py

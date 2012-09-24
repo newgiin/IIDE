@@ -100,6 +100,9 @@ class iiMainWindow : public QMainWindow
 
     // program actions
     QAction *exitProgramAction;
+
+    // meta
+    QString lastUsedDirectory;
 };
 
 #endif

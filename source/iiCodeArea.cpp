@@ -16,18 +16,10 @@ iiCodeArea::iiCodeArea(QWidget *parent)
   highlighter = new iiPythonHighlighter(document());
 
   // Set the font to the closest monospace font available
-  QFontDatabase database;
-  QFont font;
-  if (database.families().contains("Monospace"))
-    font = QFont("Monospace", 12);
-  else {
-    foreach (QString family, database.families()) {
-      if (database.isFixedPitch(family)) {
-        font = QFont(family, 12);
-        break;
-      }
-    }
-  }
+  int c = QFontDatabase::addApplicationFont("../Envy Code R.ttf");
+  std::cout << c << std::endl;
+  QFont font = QFont("Envy Code R", 12);
+
   setFont(font);
   tab_width = 4;
   setWordWrapMode(QTextOption::NoWrap);
