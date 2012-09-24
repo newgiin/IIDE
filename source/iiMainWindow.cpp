@@ -21,7 +21,14 @@ iiMainWindow::iiMainWindow()
   activeCodeArea = NULL;
 
   // init meta information
-  lastUsedDirectory = "";
+  QFile f_last_dir("lastdir");
+  if (!f_last_dir.open(QIODevice::ReadWrite | QIODevice::Text)) {
+    std::cout << "lastdir failed to open" << std::endl;
+    return;
+  }
+  QTextStream textstream(&f_last_dir);
+  textstream >> lastUsedDirectory;
+
 
   //setWindowFlags(Qt::FramelessWindowHint);
 
@@ -133,6 +140,18 @@ void iiMainWindow::openFileDialog()
   QFile file(fileName);
   if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
     return;
+
+  QFileInfo finfo(fileName);
+  lastUsedDirectory = finfo.dir().absolutePath();
+  QFile f_last_dir("lastdir");
+  if (!f_last_dir.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
+    std::cout << "lastdir failed to open" << std::endl;
+    return;
+  }
+  QTextStream textstream(&f_last_dir);
+  textstream << lastUsedDirectory;
+
+
   activeCodeArea->setWindowTitle(fileName);
   activeCodeArea->setFileName(fileName);
   QTextStream in(&file);
