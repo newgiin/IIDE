@@ -17,15 +17,25 @@
 #include <QTimer>
 
 #include <vector>
+#include <cassert>
 
 #include "iiCodeArea.h"
 #include "iiConsole.h"
 #include "iiFnSelectDialog.h"
 
-struct OutlineFunction 
+
+struct OutlineFunction
 {
   QString name;           // name + args
   int     line_no;        // line number
+
+};
+
+struct OutlineClass
+{
+  QString name;
+  int line_no;
+  std::vector<OutlineFunction> outlineFunctions;
 };
 
 class iiMainWindow : public QMainWindow
@@ -70,7 +80,7 @@ class iiMainWindow : public QMainWindow
     // code outline
     QTreeWidget *codeOutline;
     QDockWidget *codeOutlineDock;
-    std::vector<OutlineFunction> outline_functions;
+    std::vector<OutlineClass> outlineClasses;
     QTreeWidgetItem *functionsHeader;
 
     // timer

@@ -3,6 +3,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QHeaderView>
+#include <QtDebug>
 
 #include <iostream>
 #include <fstream>
@@ -151,7 +152,6 @@ void iiMainWindow::openFileDialog()
   QTextStream textstream(&f_last_dir);
   textstream << lastUsedDirectory;
 
-
   activeCodeArea->setWindowTitle(fileName);
   activeCodeArea->setFileName(fileName);
   QTextStream in(&file);
@@ -256,7 +256,7 @@ void iiMainWindow::runProgram()
   }
   programProcess = new QProcess(this);
 
-  // set the pythonpath so relative paths from the program work
+  // set the working directory so relative paths from the program work
   QFileInfo finfo = QFileInfo(activeCodeArea->getFileName());
   programProcess->setWorkingDirectory(finfo.dir().absolutePath());
 
@@ -287,12 +287,18 @@ void iiMainWindow::updateConsoleFromProcess()
 
 void iiMainWindow::updateCodeOutlineFromProcess(int exitCode, QProcess::ExitStatus exitStatus)
 {
-  QStringList funcs =
+  QStringList lines =
      QString(pythonParserProcess->readAllStandardOutput()).split("\n", 
          QString::SkipEmptyParts);
+  if (lines.length() == 0) {
+    return;
+  }
+
+  // delete previous data
+  delete codeOutline;
+  outlineClasses.clear();
 
   // Recreate entire qtreewidget listing
-  delete codeOutline;
   codeOutline = new QTreeWidget(this);
   codeOutline->setColumnCount(1);
   codeOutline->header()->hide();
@@ -301,36 +307,49 @@ void iiMainWindow::updateCodeOutlineFromProcess(int exitCode, QProcess::ExitStat
   connect(codeOutline, SIGNAL(itemClicked(QTreeWidgetItem*, int)),
         this, SLOT(jumpToFunction(QTreeWidgetItem*, int)));
 
-  // Function header
-  QTreeWidgetItem *functionsHeader =
-    new QTreeWidgetItem(codeOutline, QStringList(QString("Functions")));
-  codeOutline->addTopLevelItem(functionsHeader);
-  codeOutline->expandItem(functionsHeader);
-
-  // Add functions to outline
-  outline_functions.clear();
-  QList<QTreeWidgetItem *> items;
-  OutlineFunction func;
-  for (int i = 0; i < funcs.length(); i+=2) {
-    func.name = QString(funcs[i]);
-    func.line_no = funcs[i+1].toInt();
-    outline_functions.push_back(func);
-    items.append(new QTreeWidgetItem(functionsHeader, QStringList(func.name)));
+  // Parse outline data
+  int class_cnt = lines[0].toInt();
+  int line_index = 1;
+  for (int i = 0; i < class_cnt; i++) {
+    OutlineClass outline_class;
+    outline_class.name = QString(lines[line_index++]);
+    outline_class.line_no = lines[line_index++].toInt();
+    int function_cnt = lines[line_index++].toInt();
+    QTreeWidgetItem *classHeader = new QTreeWidgetItem(codeOutline, QStringList(outline_class.name));
+    codeOutline->addTopLevelItem(classHeader);
+    codeOutline->expandItem(classHeader);
+    for (int j = 0; j < function_cnt; j++) {
+      OutlineFunction outline_function;
+      outline_function.name = lines[line_index++];
+      outline_function.line_no = lines[line_index++].toInt();
+      outline_class.outlineFunctions.push_back(outline_function);
+      classHeader->addChild(new QTreeWidgetItem(classHeader, QStringList(outline_function.name)));
+    }
+    outlineClasses.push_back(outline_class);
   }
-  functionsHeader->addChildren(items);
-
-  // attach to dock
   codeOutlineDock->setWidget(codeOutline);
 }
 
 void iiMainWindow::jumpToFunction(QTreeWidgetItem *item, int column)
 {
-  std::cout << "ERROR in jumpToFunction. Bad index." << std::endl;
-  int index = codeOutline->topLevelItem(0)->indexOfChild(item);
+  int line_no = -1;
+  int index;
+  QTreeWidgetItem *parent = item->parent();
+  if (parent == NULL) {
+    index = codeOutline->indexOfTopLevelItem(item);
+    line_no = outlineClasses[index].line_no;
+  } else {
+    int parent_index = codeOutline->indexOfTopLevelItem(parent);
+    index = parent->indexOfChild(item);
+    OutlineClass oc = outlineClasses[parent_index];
+    OutlineFunction of = oc.outlineFunctions[index];
+    line_no = of.line_no;
+  }
+
   if (index < 0 || column != 0) {
+    std::cout << "ERROR in jumpToFunction. Bad index." << std::endl;
     return;
   }
-  int line_no = outline_functions[index].line_no;
 
   QTextCursor new_cursor = activeCodeArea->textCursor();
   new_cursor.setPosition(0);
