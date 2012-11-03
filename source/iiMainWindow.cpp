@@ -119,14 +119,12 @@ QSize iiMainWindow::sizeHint() const
 
 void iiMainWindow::fnSelect()
 {
-  std::cout << "dialog0" << endl;
   QMdiSubWindow *activeSubWin = mainArea->activeSubWindow();
   if (activeSubWin == 0)
     return;
 
   activeCodeArea = (iiCodeArea*) activeSubWin->widget();
-  fnSelectDialog = new iiFnSelectDialog();
-  std::cout << "dialog" << endl;
+  fnSelectDialog = new iiFnSelectDialog(this, &(this->outlineClasses));
 }
 
 void iiMainWindow::openFileDialog()
@@ -352,12 +350,17 @@ void iiMainWindow::jumpToFunction(QTreeWidgetItem *item, int column)
   }
 
   QTextCursor new_cursor = activeCodeArea->textCursor();
+  new_cursor = activeCodeArea->cursorForPosition(QPoint(0, line_no));
   new_cursor.setPosition(0);
+  qDebug() << activeCodeArea->height();
+  //int height_in_lines = activeCodeArea->height() / activeCodeArea->;
   for (int i = 1; i < line_no; i++) {
     new_cursor.movePosition(QTextCursor::NextBlock);
   }
   new_cursor.movePosition(QTextCursor::EndOfBlock);
+
   activeCodeArea->setTextCursor(new_cursor);
+  activeCodeArea->centerCursor();
 
   activeCodeArea->setFocus(Qt::OtherFocusReason);
 }

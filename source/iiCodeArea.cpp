@@ -18,7 +18,7 @@ iiCodeArea::iiCodeArea(QWidget *parent)
   // Set the font to the closest monospace font available
   int c = QFontDatabase::addApplicationFont("../Envy Code R.ttf");
   std::cout << c << std::endl;
-  QFont font = QFont("Envy Code R", 12);
+  QFont font = QFont("Envy Code R", 11);
 
   setFont(font);
   tab_width = 4;

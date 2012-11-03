@@ -22,21 +22,8 @@
 #include "iiCodeArea.h"
 #include "iiConsole.h"
 #include "iiFnSelectDialog.h"
+#include "iiOutline.h"
 
-
-struct OutlineFunction
-{
-  QString name;           // name + args
-  int     line_no;        // line number
-
-};
-
-struct OutlineClass
-{
-  QString name;
-  int line_no;
-  std::vector<OutlineFunction> outlineFunctions;
-};
 
 class iiMainWindow : public QMainWindow
 {

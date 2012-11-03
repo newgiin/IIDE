@@ -1,13 +1,18 @@
 #include "iiFnSelectDialog.h"
 
-iiFnSelectDialog::iiFnSelectDialog(QWidget *parent)
+iiFnSelectDialog::iiFnSelectDialog(QWidget *parent, std::vector<OutlineClass> *outline)
   : QDialog(parent)
 {
-  setLayout(&layout);
-  layout.addWidget(&text);
-  layout.addWidget(&userInput);
+  this->outline = outline;
+  functionList = new QListWidget(this);
 
-  text.setText("fncs");
+  setLayout(&layout);
+  layout.addWidget(functionList);
+
+  std::vector<OutlineFunction>::iterator it = (*outline)[0].outlineFunctions.begin();
+  for (; it != (*outline)[0].outlineFunctions.end(); ++it) {
+    functionList->addItem(new QListWidgetItem((*it).name, functionList));
+  }
 
   exec();
 }
