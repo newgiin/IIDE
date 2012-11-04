@@ -124,7 +124,28 @@ void iiMainWindow::fnSelect()
     return;
 
   activeCodeArea = (iiCodeArea*) activeSubWin->widget();
-  fnSelectDialog = new iiFnSelectDialog(this, &(this->outlineClasses));
+  FlattenedOutline outline;
+  flattenedOutline(&outline);
+  fnSelectDialog = new iiFnSelectDialog(this, &outline);
+  int line_no = fnSelectDialog->result();
+
+  if (line_no < 0) 
+    return;
+
+  // NOTE this is repetitive with jumptofnc; needs to be abstracted later
+  QTextCursor new_cursor = activeCodeArea->textCursor();
+  new_cursor = activeCodeArea->cursorForPosition(QPoint(0, line_no));
+  new_cursor.setPosition(0);
+  //int height_in_lines = activeCodeArea->height() / activeCodeArea->;
+  for (int i = 1; i < line_no; i++) {
+    new_cursor.movePosition(QTextCursor::NextBlock);
+  }
+  new_cursor.movePosition(QTextCursor::EndOfBlock);
+
+  activeCodeArea->setTextCursor(new_cursor);
+  activeCodeArea->centerCursor();
+
+  activeCodeArea->setFocus(Qt::OtherFocusReason);
 }
 
 void iiMainWindow::openFileDialog()
@@ -352,7 +373,6 @@ void iiMainWindow::jumpToFunction(QTreeWidgetItem *item, int column)
   QTextCursor new_cursor = activeCodeArea->textCursor();
   new_cursor = activeCodeArea->cursorForPosition(QPoint(0, line_no));
   new_cursor.setPosition(0);
-  qDebug() << activeCodeArea->height();
   //int height_in_lines = activeCodeArea->height() / activeCodeArea->;
   for (int i = 1; i < line_no; i++) {
     new_cursor.movePosition(QTextCursor::NextBlock);
@@ -363,4 +383,18 @@ void iiMainWindow::jumpToFunction(QTreeWidgetItem *item, int column)
   activeCodeArea->centerCursor();
 
   activeCodeArea->setFocus(Qt::OtherFocusReason);
+}
+
+void iiMainWindow::flattenedOutline(FlattenedOutline *outline) const
+{
+  std::vector<OutlineClass>::const_iterator it;
+  std::vector<OutlineFunction>::const_iterator it2;
+  for (it = outlineClasses.begin(); it != outlineClasses.end(); ++it) 
+  {
+    for (it2 = (*it).outlineFunctions.begin();
+        it2 != (*it).outlineFunctions.end(); ++it2)
+    {
+      outline->functions.push_back(*it2);
+    }
+  }
 }

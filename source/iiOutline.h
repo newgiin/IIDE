@@ -9,12 +9,20 @@ struct OutlineFunction
 
 };
 
+
 struct OutlineClass
 {
   QString name;
   int line_no;
   std::vector<OutlineFunction> outlineFunctions;
 };
+
+
+struct FlattenedOutline
+{
+  std::vector<OutlineFunction> functions;
+};
+
 
 
 #endif // IIOUTLINE_H

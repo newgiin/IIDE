@@ -33,6 +33,7 @@ class iiMainWindow : public QMainWindow
     iiMainWindow();
 
     QSize sizeHint() const;
+    void flattenedOutline(FlattenedOutline *outline) const;
 
   signals:
 
